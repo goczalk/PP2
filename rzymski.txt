@@ -1,0 +1,185 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int print_unit(int x);
+int convert_from_roman(char c);
+
+char t[] = {'I', 'V', 'X', 'L', 'C', 'D', 'M'};
+
+//zrob wybor dec to rom etc
+
+int main()
+{
+    int c;
+    printf("Zamien zapis: (1) dziesietny na rzymski, (2) rzymski na dziesietny: ");
+    scanf("%d", &c);
+    switch(c){
+         case 1: print_roman(); break;
+         case 2: print_decimal(); break;
+    }
+    return 0;
+}
+
+//decial to roman
+void print_roman(){
+    int x=0;
+    printf("Podaj liczbe w zapisie dziesietnym: ");
+    scanf("%d",&x);
+
+    //tysiace
+    if( (x/1000) >= 4){
+        printf("Za duza liczba.\n");
+    }
+
+    printf("Zapis rzymski to: ");
+
+    if( (x/1000) > 0 && (x/1000) < 4){
+        x = print_tousands(x);
+    }
+
+    //setki
+    if( (x/100) > 0 && (x/100) < 5){
+        x = print_till_500(x);
+    }
+
+    if( (x/100) >= 5 && (x/100)< 10 ){
+        x = print_after_500(x);
+    }
+
+    //dziesiatki
+    if( (x/10) > 0 && (x/10) < 5){
+        x = print_till_50(x);
+    }
+
+    if( (x/10) >= 5 && (x/10)< 10 ){
+        x = print_after_50(x);
+    }
+
+    //jednosci
+    if((x/5) < 1){
+        print_unit_till_5(x);
+    }
+    if ((x/5) >= 1 && (x/5) < 2){
+        print_unit_after_5(x);
+    }
+}
+
+int print_unit_till_5(int x){
+    int i = x % 5;
+    template_till(x, i, 0);
+}
+
+int print_unit_after_5(int x){
+    if(x % 5 == 4){
+        printf("%c%c", t[0], t[2]);
+        return x;
+    }
+    printf("%c", t[1]);
+    print_unit_till_5(x);
+}
+
+int print_till_50(int x){
+    int i = x / 10;
+    return template_till(x, i, 2, 10);
+}
+
+int print_after_50(int x){
+    int i = x / 10;
+    return template_after(x, i, 2, 10);
+}
+
+int print_till_500(int x){
+    int i = x / 100;
+    return template_till(x, i, 4, 100);
+}
+
+int print_after_500(int x){
+    int i = x / 100;
+    return template_after(x, i, 4, 100);
+}
+
+int print_tousands(int x){
+    int i = x / 1000;
+    return template_till(x, i, 6, 1000);
+}
+
+//x - numer, i - result of division via 10, 100 etc., a - index in list, wlk - 10, 100 etc.
+int template_till(int x, int i, int a, int wlk){
+    int licznik=1;
+    if(i == 4){
+        printf("%c%c", t[a], t[a+1]);
+        return x - 4 * wlk;
+    }
+    else {
+        for(licznik=1; licznik <= i; licznik++){
+            printf("%c",t[a]);
+        }
+        return x - i * wlk;
+    }
+}
+
+int template_after(int x, int i, int a, int wlk){
+    int licznik;
+
+    if(i == 9){
+        printf("%c%c", t[a], t[a+2]);
+        return x - 9 * wlk;
+    }
+    printf("%c", t[a+1]);
+
+    i = i % 5;
+    for(licznik=1; licznik <= i ; licznik++){
+        printf("%c", t[a]);
+    }
+    return x - 5 * wlk - i * wlk;
+}
+
+//roman to decimal
+void print_decimal(){
+
+    char x_roman[100];
+    int num =0;
+
+    printf("Podaj liczbe w zapisie rzymskim: ");
+    scanf("%s",x_roman);
+
+    int i=0;
+    int current = 0, next = 0;
+
+    while(x_roman[i]){
+        current = convert_from_roman(x_roman[i]);
+        next = convert_from_roman(x_roman[i+1]);
+
+         if(current < 0){
+             printf("Nieprawidlowa liczba rzymska.");
+         }
+
+         if(current >= next)
+             num = num + current;
+
+        //przypadek IX etc.
+         else{
+             num = num + next - current;
+             i++;
+         }
+         i++;
+    }
+
+    printf("Zapis dziesietny to: %d", num);
+}
+
+int convert_from_roman(char c){
+    int x=0;
+    switch(c){
+         case 'I': x = 1; break;
+         case 'V': x = 5; break;
+         case 'X': x = 10; break;
+         case 'L': x = 50; break;
+         case 'C': x = 100; break;
+         case 'D': x = 500; break;
+         case 'M': x = 1000; break;
+         case '\0': x = 0; break;
+         default: x = -1;
+    }
+    return x;
+}
