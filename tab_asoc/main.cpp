@@ -14,6 +14,7 @@ klas z wykorzystaniem polimorfizmu.
 
 # include "tab_asoc.hpp"
 # include <iostream>
+# include <stdexcept>
 
 using namespace std;
 
@@ -36,19 +37,25 @@ int main(){
 	AssocTab a = *wsk_a;
 	AssocTab_CaseIns b = *wsk_b;
 	
-	//szukanie po zwyklym AssocTab
-	cout << (a["ania"]) << endl;
-	//cout << (a["OLa"]) << endl;
-	
-	cout << "************" << endl;;
-	//szukanie po zwyklym AssocTab_CaseIns
-	cout << (b["marek"]) << endl;
-	cout << (b["MaREk"]) << endl;
-	
-	//(*wsk_b)["marek"];
-	
-	delete wsk_a;
-	delete wsk_b;
+    try{
+        //szukanie po zwyklym AssocTab
+        cout << (a["ania"]) << endl;
+        cout << "************" << endl;;
+
+        //cout << (a["OLa"]) << endl;
+
+        cout << "************" << endl;;
+        //szukanie po zwyklym AssocTab_CaseIns
+        cout << (b["marek"]) << endl;
+        cout << (b["MaREk"]) << endl;
+
+        //(*wsk_b)["marek"];
+    }
+    catch(std::out_of_range& err){
+        cout << "Blad to: " << err.what() <<endl;
+    }
+    delete wsk_a;
+    delete wsk_b;
 	
 	return 0;
 }

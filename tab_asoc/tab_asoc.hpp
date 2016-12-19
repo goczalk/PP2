@@ -13,7 +13,8 @@ class AssocTab{
 		//dodatkowo
 		void delete_node(const char* key);
 
-		virtual node_t* find(const char* key) const;
+        virtual int compare(const char* a, const char* b) const;
+        node_t* find(const char* key) const;
 		
 		void swap(AssocTab& t);
 	public:
@@ -31,7 +32,7 @@ class AssocTab{
 //CaseIns = Case Insensitive
 class AssocTab_CaseIns
 	: public AssocTab{
-		virtual node_t* find(const char* key) const;
+        virtual int compare(const char* a, const char* b) const;
 };
 
 #endif 

@@ -1,6 +1,6 @@
 # include <iostream>
 # include <stdexcept>
-# include <strings.h>
+# include <string.h>
 # include "tab_asoc.hpp"
 
 
@@ -66,24 +66,20 @@ void AssocTab::delete_node(const char* key){
 	delete found;	
 }
 
+//help
+int AssocTab::compare(const char* a, const char* b) const{
+    return strcmp(a, b);
+}
+
+int AssocTab_CaseIns::compare(const char* a, const char* b) const{
+    return strcasecmp(a, b);
+}
+
+
 AssocTab::node_t* AssocTab::find(const char* key) const{
 	node_t * o;
     for(o = head; o != NULL; o = o->next){
-		if (o->key == key){
-			break;
-		}
-		else{
-			if (o->next == NULL){
-				throw std::out_of_range("No such key in AssocTab");}
-		}
-	}
-	return o;
-}
-
-AssocTab_CaseIns::node_t* AssocTab_CaseIns::find(const char* key) const{
-	node_t * o;
-    for(o = head; o != NULL; o = o->next){
-		if (!strcasecmp(o->key, key)){
+        if (!compare(o->key, key)){
 			break;
 		}
 		else{
